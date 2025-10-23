@@ -25,7 +25,6 @@ class UserUnitTests(unittest.TestCase):
         user = User("bob", "bobpass")
         assert user.username == "bob"
 
-    # pure function no side effects or integrations called
     def test_get_json(self):
         user = User("bob", "bobpass")
         user_json = user.get_json()
@@ -33,7 +32,7 @@ class UserUnitTests(unittest.TestCase):
     
     def test_hashed_password(self):
         password = "mypass"
-        hashed = generate_password_hash(password, method='sha256')
+        hashed = generate_password_hash(password)
         user = User("bob", password)
         assert user.password != password
 
@@ -45,7 +44,6 @@ class UserUnitTests(unittest.TestCase):
 '''
     Integration Tests
 '''
-
 # This fixture creates an empty database for the test and deletes it after the test
 # scope="class" would execute the fixture once and resued for all methods in the class
 @pytest.fixture(autouse=True, scope="module")

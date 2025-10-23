@@ -48,16 +48,27 @@ app.cli.add_command(user_cli)
 Test Commands
 '''
 
-@test.command("user", help="Run User tests")
+'''
+Unit Test Commands
+- These commands only INVOKE pytest to run your unit tests.
+- Unit tests themselves must avoid hitting the real DB / app context.
+'''
+@test.command("user", help="Run User tests (unit/int/all)")
 @click.argument("type", default="all")
 def user_tests_command(type):
+    """
+    unit -> runs tests filtered by 'UserUnitTests'
+    int  -> runs tests filtered by 'UserIntegrationTests'
+    all  -> runs tests filtered by 'App'
+    """
     if type == "unit":
         sys.exit(pytest.main(["-k", "UserUnitTests"]))
     elif type == "int":
         sys.exit(pytest.main(["-k", "UserIntegrationTests"]))
     else:
         sys.exit(pytest.main(["-k", "App"]))
-app.cli.add_command(test)
+
+# End of Unit Test Commands
 
 
 @user_cli.command("week", help="Schedule a simple 9-5 week for a user (Mon-Fri)")
@@ -75,19 +86,28 @@ def schedule_simple_week(username, week_start):
     created, skipped = result["created"], result["skipped"]
     print(f"Created {len(created)} shifts; Skipped (already existed) {len(skipped)}.")
 
-@test.command("roster", help="Print roster for a date range")
-@click.argument("start")
-@click.argument("end")
+'''
+Integration Test Commands
+- These commands exercise real app/database behavior and print results.
+- Use them as lightweight smoke tests or exploratory checks.
+'''
+@test.command("roster", help="Print roster for a date range (integration)")
+@click.argument("start")  # YYYY-MM-DD
+@click.argument("end")    # YYYY-MM-DD
 def print_roster(start, end):
     roster = get_roster(date.fromisoformat(start), date.fromisoformat(end))
     for r in roster:
         print(r)
 
-@test.command("report", help="Weekly report by week_start")
-@click.argument("week_start")
+@test.command("report", help="Weekly report by week_start (integration)")
+@click.argument("week_start")  # YYYY-MM-DD (Monday)
 def print_report(week_start):
     rep = weekly_report(date.fromisoformat(week_start))
     print(rep)
+
+# Register the test command group ONCE, after all @test.command defs:
+app.cli.add_command(test)
+
 
 def _print_json(data):
     print(json.dumps(data, indent=2, default=str))

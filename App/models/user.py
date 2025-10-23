@@ -11,25 +11,23 @@ class User(db.Model):
     def __repr__(self):
         return f"<User id={self.id} username={self.username!r} admin={self.isAdmin}>"
 
-    def __init__(self, username, password=None, isAdmin=False):
+
+    def __init__(self, username, password, isAdmin=False):
         self.username = username
         self.isAdmin = isAdmin
         if password:  
             self.set_password(password)
 
     def get_json(self):
-        return{
+        return {
             'id': self.id,
-            'username': self.username,
-            'isAdmin': self.isAdmin
+            'username': self.username
         }
 
     def set_password(self, password):
-        """Create hashed password."""
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password)  # default pbkdf2:sha256
     
     def check_password(self, password):
-        """Check hashed password."""
         return check_password_hash(self.password, password)
 
     def is_authenticated_admin(self):
