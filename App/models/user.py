@@ -11,11 +11,12 @@ class User(db.Model):
     def __repr__(self):
         return f"<User id={self.id} username={self.username!r} admin={self.isAdmin}>"
 
-    # ✅ add a default so tests can call User("bob", "bobpass")
+
     def __init__(self, username, password, isAdmin=False):
         self.username = username
-        self.set_password(password)
         self.isAdmin = isAdmin
+        if password:  
+            self.set_password(password)
 
     def get_json(self):
         return {
