@@ -37,7 +37,7 @@ def schedule_shift(user_id: int, work_date: date, start: dtime, end: dtime, role
 def schedule_week(user_id: int, week_start: date, daily_windows: dict, role=None, location=None, skip_existing=True):
     created, skipped = [], []
     for offset in range(7):
-        pair = daily_windows.get(offset)
+        pair = daily_windows.get(offset) or daily_windows.get(str(offset))
         if not pair:
             continue
         start_s, end_s = pair
