@@ -1,47 +1,13 @@
 {% extends "layout.html" %}
-{% block title %}ShiftMate{% endblock %}
+{% block title %}Flask MVC App{% endblock %}
+{% block page %}Flask MVC App{% endblock %}
 
 {{ super() }}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-<body class="body">
-<!-- Main Header 
-
-<!-- Button to toggle the left panel -->
-<button class="toggle-btn" onclick="toggleLeftPanel()">☰</button>
-
-</body>
-
-
-<script> 
-    document.addEventListener('DOMContentLoaded', () => {
-        const wrapper = document.querySelector('.left-panel-wrapper');
-        const toggleBtn = document.querySelector('.toggle-btn');
-
-        toggleBtn.addEventListener('click', () => {
-            wrapper.classList.toggle('expanded');
-        });
-
-        // Collapse panel on outside click (optional enhancement)
-        document.addEventListener('click', (event) => {
-            if (
-                wrapper.classList.contains('expanded') &&
-                !wrapper.contains(event.target) &&
-                !toggleBtn.contains(event.target)
-            ) {
-                wrapper.classList.remove('expanded');
-            }
-        });
-    });
-
-    document.getElementById('toggleBtn').addEventListener('click', function () {
-        // existing toggle logic for forms
-        container.classList.toggle("sign-up-mode");
-    
-        // shrink the button
-        this.classList.toggle("shrinked");
-    });
-</script>
-
+    <h1>Flask MVC</h1>
+    {% if is_authenticated %}
+        <p> Welcome {{current_user.username}} </p>
+    {% endif %}
+    <p>This is a boileplate flask application which follows the MVC pattern for structuring the project.</p>
 {% endblock %}
