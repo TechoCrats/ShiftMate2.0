@@ -40,22 +40,13 @@ def api_get_users():
 @api.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-
-    if not data or 'username' not in data or 'password' not in data:
-        return jsonify({"msg": "Invalid input"}), 400
-
-    username = data['username']
-    password = data['password']
-
+    username = data.get("username")
+    password = data.get("password")
 
     if User.query.filter_by(username=username).first():
         return jsonify({"msg": "Username already exists"}), 409
 
-
-    user = User(username=username)
-    user.set_password(password)
-
-
+    user = User(username=username, password=password)
     db.session.add(user)
     db.session.commit()
 
